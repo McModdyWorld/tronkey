@@ -35,9 +35,11 @@ function Search-App {
         # Normalize the search term to lower case for case-insensitive search
         $SearchTerm = $SearchTerm.ToLower()
 
-        # Use 'Where-Object' to filter the list based on partial match for name and link
+        # Use 'Where-Object' with an explicit condition check
         $FilteredApps = $AppList | Where-Object {
-            ($_ .Name.ToLower() -like "*$SearchTerm*") -or ($_ .Link.ToLower() -like "*$SearchTerm*")
+            if ($_.Name.ToLower() -like "*$SearchTerm*") { return $true }
+            if ($_.Link.ToLower() -like "*$SearchTerm*") { return $true }
+            return $false
         }
 
         if ($FilteredApps) {
@@ -47,6 +49,7 @@ function Search-App {
         }
     }
 }
+
 
 
 # Function to install an app
