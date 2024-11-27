@@ -3,3 +3,4 @@ tailscale, https://pkgs.tailscale.com/stable/tailscale-setup-latest.exe, Tailsca
 vencord, https://github.com/Vencord/Installer/releases/latest/download/VencordInstaller.exe, VencordInstall.exe
 spotify, https://download.scdn.co/SpotifySetup.exe, SpotifyInstall.exe
 discord, https://discord.com/api/downloads/distributions/app/installers/latest?channel=stable&platform=win&arch=x64, DiscordInstall.exe
+epic-games, https://launcher-public-service-prod06.ol.epicgames.com/launcher/api/installer/download/EpicGamesLauncherInstaller.msi, EpicGamesInstall.msi
