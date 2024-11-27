@@ -2,4 +2,4 @@ steam, https://cdn.fastly.steamstatic.com/client/installer/SteamSetup.exe, Steam
 tailscale, https://pkgs.tailscale.com/stable/tailscale-setup-latest.exe, TailscaleInstall.exe
 vencord, https://github.com/Vencord/Installer/releases/latest/download/VencordInstaller.exe, VencordInstall.exe
 spotify, https://download.scdn.co/SpotifySetup.exe, SpotifyInstall.exe
-
+discord, https://discord.com/api/downloads/distributions/app/installers/latest?channel=stable&platform=win&arch=x64, DiscordInstall.exe
