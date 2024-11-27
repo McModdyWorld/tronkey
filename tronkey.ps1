@@ -22,10 +22,11 @@ function Get-AppList {
             }
         }
     } catch {
-        Write-Error "Failed to fetch the app list. Check your internet connection or the AppList URL."
-        return $null
+        # Instead of writing an error, return an empty array to prevent red error
+        return @()
     }
 }
+
 
 # Function to search for apps
 function Search-App {
