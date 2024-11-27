@@ -55,16 +55,23 @@ function Install-App {
             try {
                 Invoke-WebRequest -Uri $App.Link -OutFile $App.SavedFileName
                 Write-Host "Running installer: $($App.SavedFileName)" -ForegroundColor Cyan
-                Start-Process -FilePath $App.SavedFileName -Wait
-                Write-Host "$($App.Name) installation completed." -ForegroundColor Green
+                $process = Start-Process -FilePath $App.SavedFileName -PassThru -Wait
+                # Check if the process is still running or if it was canceled
+                if ($process.HasExited -and $process.ExitCode -ne 0) {
+                    Write-Host "The installation was canceled or failed." -ForegroundColor Yellow
+                } else {
+                    Write-Host "$($App.Name) installation completed." -ForegroundColor Green
+                }
             } catch {
-                Write-Error "Failed to download or run the installer for $($App.Name)."
+                # Prevent the error if the installer fails (e.g., UAC prompt was declined)
+                Write-Host "Failed to download or run the installer for $($App.Name)." -ForegroundColor Yellow
             }
         } else {
             Write-Host "App '$AppName' not found in the list." -ForegroundColor Yellow
         }
     }
 }
+
 
 # Main script logic
 switch ($Command) {
