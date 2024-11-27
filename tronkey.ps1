@@ -27,13 +27,21 @@ function Get-AppList {
     }
 }
 
-# Function to search for apps
+# Function to search for apps with more flexible matching
 function Search-App {
     param([string]$SearchTerm)
 
     $AppList = Get-AppList
     if ($AppList) {
-        $FilteredApps = $AppList | Where-Object { $_.Name -like "*$SearchTerm*" }
+        # Normalize the search term to lower case for case-insensitive search
+        $SearchTerm = $SearchTerm.ToLower()
+
+        # Use 'Where-Object' to filter the list based on partial or fuzzy match
+        $FilteredApps = $AppList | Where-Object { 
+            $_.Name.ToLower() -like "*$SearchTerm*" 
+            -or $_.Link.ToLower() -like "*$SearchTerm*" 
+        }
+
         if ($FilteredApps) {
             $FilteredApps | ForEach-Object { Write-Host "$($_.Name)" -ForegroundColor Green }
         } else {
@@ -41,6 +49,7 @@ function Search-App {
         }
     }
 }
+
 
 # Function to install an app
 function Install-App {
