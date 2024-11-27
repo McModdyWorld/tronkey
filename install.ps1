@@ -1,21 +1,7 @@
-# Function to check if the script is running as Administrator
-function Test-IsAdmin {
-    $currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()
-    $principal = New-Object Security.Principal.WindowsPrincipal($currentUser)
-    return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-}
-
-# If not running as Administrator, restart with elevated privileges
-if (-not (Test-IsAdmin)) {
-    Write-Host "Requesting Administrator privileges..."
-    Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
-    Exit
-}
-
 # Define the folder and the script URLs
 $folderPath = "$env:ProgramData\TronKey"
 $installScriptUrl = 'https://raw.githubusercontent.com/McModdyWorld/tronkey/refs/heads/main/tronkey.ps1'
-$uninstallScriptUrl = 'https://raw.githubusercontent.com/McModdyWorld/tronkey/refs/heads/main/tronkey-uninstall.ps1'
+$uninstallScriptUrl = 'https://raw.githubusercontent.com/McModdyWorld/tronkey/refs/heads/main/uninstall.ps1'
 
 $installScriptPath = "$folderPath\tronkey.ps1"
 $uninstallScriptPath = "$folderPath\tronkey-uninstall.ps1"
