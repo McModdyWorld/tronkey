@@ -27,7 +27,6 @@ function Get-AppList {
     }
 }
 
-
 # Function to search for apps
 function Search-App {
     param([string]$SearchTerm)
@@ -51,11 +50,18 @@ function Install-App {
     if ($AppList) {
         $App = $AppList | Where-Object { $_.Name -eq $AppName }
         if ($App) {
+            $tempDir = [System.IO.Path]::Combine($env:TEMP, "tronkeyinstallerfiles")
+            if (-not (Test-Path $tempDir)) {
+                New-Item -ItemType Directory -Path $tempDir
+            }
+            
+            $filePath = [System.IO.Path]::Combine($tempDir, $App.SavedFileName)
+            
             Write-Host "Downloading $($App.Name) from $($App.Link)..." -ForegroundColor Cyan
             try {
-                Invoke-WebRequest -Uri $App.Link -OutFile $App.SavedFileName
-                Write-Host "Running installer: $($App.SavedFileName)" -ForegroundColor Cyan
-                $process = Start-Process -FilePath $App.SavedFileName -PassThru -Wait
+                Invoke-WebRequest -Uri $App.Link -OutFile $filePath
+                Write-Host "Running installer: $filePath" -ForegroundColor Cyan
+                $process = Start-Process -FilePath $filePath -PassThru -Wait
                 # Check if the process is still running or if it was canceled
                 if ($process.HasExited -and $process.ExitCode -ne 0) {
                     Write-Host "The installation was canceled or failed." -ForegroundColor Yellow
@@ -71,7 +77,6 @@ function Install-App {
         }
     }
 }
-
 
 # Main script logic
 switch ($Command) {
