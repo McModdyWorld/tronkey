@@ -27,7 +27,6 @@ function Get-AppList {
     }
 }
 
-# Function to search for apps with more flexible matching
 function Search-App {
     param([string]$SearchTerm)
 
@@ -36,10 +35,9 @@ function Search-App {
         # Normalize the search term to lower case for case-insensitive search
         $SearchTerm = $SearchTerm.ToLower()
 
-        # Use 'Where-Object' to filter the list based on partial or fuzzy match
-        $FilteredApps = $AppList | Where-Object { 
-            $_.Name.ToLower() -like "*$SearchTerm*" 
-            -or $_.Link.ToLower() -like "*$SearchTerm*" 
+        # Use 'Where-Object' to filter the list based on partial match for name and link
+        $FilteredApps = $AppList | Where-Object {
+            ($_ .Name.ToLower() -like "*$SearchTerm*") -or ($_ .Link.ToLower() -like "*$SearchTerm*")
         }
 
         if ($FilteredApps) {
