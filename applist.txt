@@ -1,1 +1,2 @@
-Steam, https://cdn.fastly.steamstatic.com/client/installer/SteamSetup.exe, SteamSetup.exe
+steam, https://cdn.fastly.steamstatic.com/client/installer/SteamSetup.exe, SteamSetup.exe
+tailscale, https://pkgs.tailscale.com/stable/tailscale-setup-latest.exe, TailScale.exe
