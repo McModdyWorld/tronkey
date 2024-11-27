@@ -18,16 +18,16 @@ if (Test-Path $uninstallScriptPath) {
     Write-Host "tronkey-uninstall script not found."
 }
 
-# Remove the environment variables for tronkey and tronkey-uninstall
-[System.Environment]::SetEnvironmentVariable("TRONKEY", $null, [System.EnvironmentVariableTarget]::Machine)
-[System.Environment]::SetEnvironmentVariable("TRONKEY_UNINSTALL", $null, [System.EnvironmentVariableTarget]::Machine)
+# Remove the environment variables for tronkey and tronkey-uninstall (user level)
+[System.Environment]::SetEnvironmentVariable("TRONKEY", $null, [System.EnvironmentVariableTarget]::User)
+[System.Environment]::SetEnvironmentVariable("TRONKEY_UNINSTALL", $null, [System.EnvironmentVariableTarget]::User)
 Write-Host "Environment variables 'TRONKEY' and 'TRONKEY_UNINSTALL' removed."
 
-# Remove TronKey folder from the system PATH
-$path = [System.Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::Machine)
+# Remove TronKey folder from the user PATH
+$path = [System.Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::User)
 $updatedPath = $path -replace [regex]::Escape($folderPath), ""
-[System.Environment]::SetEnvironmentVariable("PATH", $updatedPath, [System.EnvironmentVariableTarget]::Machine)
-Write-Host "System PATH cleaned."
+[System.Environment]::SetEnvironmentVariable("PATH", $updatedPath, [System.EnvironmentVariableTarget]::User)
+Write-Host "User PATH cleaned."
 
 # Optionally, remove the TronKey folder if empty
 if (-not (Get-ChildItem $folderPath)) {
