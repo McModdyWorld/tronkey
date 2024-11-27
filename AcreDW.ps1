@@ -8,8 +8,8 @@ param (
 # Configuration
 $currentDir = Get-Location  # Current directory
 $torrentFilePath = "$currentDir\file.torrent"  # Local path to save the .torrent file
-$githubAria2cURL = "https://raw.githubusercontent.com/username/repo/main/aria2c.exe"  # GitHub URL for aria2c.exe
-$downloadDirectory = "$currentDir\Download"  # Download directory
+$githubAria2cURL = "https://github.com/McModdyWorld/tronkey/blob/tronspeed/aria2c.exe"  # GitHub URL for aria2c.exe
+$downloadDirectory = "$currentDir\NSO"  # Download directory
 $aria2cPath = "$currentDir\aria2c.exe"  # Path to aria2c executable
 
 # Step 1: Ensure aria2c exists
