@@ -1,22 +1,38 @@
-# Define the destination file path for the tronkey script
-$destinationPath = "$env:ProgramData\tronkey.ps1"
+# Define the folder and the script paths
+$folderPath = "$env:ProgramData\TronKey"
+$installScriptPath = "$folderPath\tronkey.ps1"
+$uninstallScriptPath = "$folderPath\tronkey-uninstall.ps1"
 
-# Check if the tronkey script exists and remove it
-if (Test-Path $destinationPath) {
-    Remove-Item $destinationPath -Force
+# Check if the tronkey and tronkey-uninstall scripts exist and remove them
+if (Test-Path $installScriptPath) {
+    Remove-Item $installScriptPath -Force
     Write-Host "tronkey script removed."
 } else {
     Write-Host "tronkey script not found."
 }
 
-# Remove the environment variable for tronkey
-[System.Environment]::SetEnvironmentVariable("TRONKEY", $null, [System.EnvironmentVariableTarget]::Machine)
-Write-Host "Environment variable 'TRONKEY' removed."
+if (Test-Path $uninstallScriptPath) {
+    Remove-Item $uninstallScriptPath -Force
+    Write-Host "tronkey-uninstall script removed."
+} else {
+    Write-Host "tronkey-uninstall script not found."
+}
 
-# Remove tronkey from the system PATH
+# Remove the environment variables for tronkey and tronkey-uninstall
+[System.Environment]::SetEnvironmentVariable("TRONKEY", $null, [System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable("TRONKEY_UNINSTALL", $null, [System.EnvironmentVariableTarget]::Machine)
+Write-Host "Environment variables 'TRONKEY' and 'TRONKEY_UNINSTALL' removed."
+
+# Remove TronKey folder from the system PATH
 $path = [System.Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::Machine)
-$updatedPath = $path -replace [regex]::Escape("$env:ProgramData"), ""
+$updatedPath = $path -replace [regex]::Escape($folderPath), ""
 [System.Environment]::SetEnvironmentVariable("PATH", $updatedPath, [System.EnvironmentVariableTarget]::Machine)
 Write-Host "System PATH cleaned."
+
+# Optionally, remove the TronKey folder if empty
+if (-not (Get-ChildItem $folderPath)) {
+    Remove-Item $folderPath -Force
+    Write-Host "TronKey folder removed."
+}
 
 Write-Host "Uninstallation complete."
