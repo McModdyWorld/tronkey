@@ -37,9 +37,56 @@ if (-not (Test-Path -Path $downloadDirectory)) {
     New-Item -ItemType Directory -Force -Path $downloadDirectory | Out-Null
 }
 
-# Step 4: Start the download using aria2c
-Write-Host "Starting torrent download using aria2c..."
-$aria2Command = "& `"$aria2cPath`" --dir=`"$downloadDirectory`" --seed-time=0 `"$torrentFilePath`""
-Invoke-Expression $aria2Command
+# Step 4: Start the download using aria2c with JSON-RPC enabled
+Write-Host "Starting torrent download using aria2c with progress tracking..."
+Start-Process -NoNewWindow -FilePath $aria2cPath -ArgumentList @(
+    "--enable-rpc=true",
+    "--rpc-listen-port=6800",
+    "--dir=`"$downloadDirectory`"",
+    "--seed-time=0",
+    "`"$torrentFilePath`""
+) -PassThru
+
+# Step 5: Monitor progress using JSON-RPC
+$rpcUrl = "http://localhost:6800/jsonrpc"
+$rpcId = ""
+$lastProgress = 0
+
+do {
+    try {
+        # Query the active download status
+        $rpcResponse = Invoke-RestMethod -Uri $rpcUrl -Method POST -Body @{
+            jsonrpc = "2.0"
+            method = "aria2.tellActive"
+            id = 1
+            params = @()
+        } | Select-Object -ExpandProperty result
+
+        if ($rpcResponse.Count -gt 0) {
+            foreach ($item in $rpcResponse) {
+                $completedLength = [int64]$item.completedLength
+                $totalLength = [int64]$item.totalLength
+                $downloadSpeed = [int64]$item.downloadSpeed
+
+                # Calculate percentages and sizes
+                $percentage = if ($totalLength -gt 0) { ($completedLength / $totalLength) * 100 } else { 0 }
+                $downloadedMB = $completedLength / 1MB
+                $totalMB = $totalLength / 1MB
+                $downloadedGB = $completedLength / 1GB
+                $totalGB = $totalLength / 1GB
+                $speedMBps = $downloadSpeed / 1MB
+
+                # Display progress
+                Write-Host ("Downloaded: {0:F2} MB / {1:F2} MB ({2:F2}%) at {3:F2} MBps" -f $downloadedMB, $totalMB, $percentage, $speedMBps)
+            }
+        }
+    } catch {
+        Write-Warning "Failed to connect to aria2c. Retrying..."
+    }
+
+    # Pause briefly before the next update
+    Start-Sleep -Seconds 1
+
+} while ($rpcResponse.Count -gt 0)
 
 Write-Host "Download complete! Seeding has been disabled."
