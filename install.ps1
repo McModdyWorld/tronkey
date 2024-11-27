@@ -1,16 +1,28 @@
-# Define the URL and the destination file path
-$scriptUrl = 'https://raw.githubusercontent.com/McModdyWorld/tronkey/refs/heads/main/tronkey.ps1'
-$destinationPath = "$env:ProgramData\tronkey.ps1"
+# Define the folder and the script URLs
+$folderPath = "$env:ProgramData\TronKey"
+$installScriptUrl = 'https://raw.githubusercontent.com/McModdyWorld/tronkey/refs/heads/main/tronkey.ps1'
+$uninstallScriptUrl = 'https://raw.githubusercontent.com/McModdyWorld/tronkey/refs/heads/main/tronkey-uninstall.ps1'
 
-# Download the script to ProgramData
-Invoke-WebRequest -Uri $scriptUrl -OutFile $destinationPath
+$installScriptPath = "$folderPath\tronkey.ps1"
+$uninstallScriptPath = "$folderPath\tronkey-uninstall.ps1"
 
-# Set up the environment variable for tronkey
-[System.Environment]::SetEnvironmentVariable("TRONKEY", $destinationPath, [System.EnvironmentVariableTarget]::Machine)
+# Create the TronKey folder if it doesn't exist
+if (-not (Test-Path $folderPath)) {
+    New-Item -ItemType Directory -Path $folderPath
+    Write-Host "Created folder: $folderPath"
+}
 
-# Add the environment variable to the system PATH so you can run 'tronkey' from anywhere
-$env:PATH += ";$env:ProgramData"
+# Download the install and uninstall scripts to the TronKey folder
+Invoke-WebRequest -Uri $installScriptUrl -OutFile $installScriptPath
+Invoke-WebRequest -Uri $uninstallScriptUrl -OutFile $uninstallScriptPath
+
+# Set up the environment variable for tronkey and tronkey-uninstall
+[System.Environment]::SetEnvironmentVariable("TRONKEY", $installScriptPath, [System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable("TRONKEY_UNINSTALL", $uninstallScriptPath, [System.EnvironmentVariableTarget]::Machine)
+
+# Add the TronKey folder to the system PATH so you can run 'tronkey' and 'tronkey-uninstall' from anywhere
+$env:PATH += ";$folderPath"
 
 # Confirm success
-Write-Host "tronkey script downloaded and environment variable set."
-Write-Host "You can now run 'tronkey' from any terminal."
+Write-Host "tronkey and tronkey-uninstall scripts downloaded to $folderPath."
+Write-Host "You can now run 'tronkey' and 'tronkey-uninstall' from any terminal."
