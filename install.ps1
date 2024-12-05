@@ -32,5 +32,4 @@ Write-Host "tronkey, tronkey-uninstall, and tronkey-update scripts downloaded to
 Write-Host "You can now run 'tronkey', 'tronkey-uninstall', and 'tronkey-update' from any terminal."
 
 
-# Thank You FREEDNS for Hosting my Github Projects on your Domains
-# - Alex
+# Thank You Codeztech for sponsoring my domain "koralnet.net"
